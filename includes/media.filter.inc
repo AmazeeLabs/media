@@ -305,14 +305,27 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
 
     // Track the fid of this file in the {media_filter_usage} table.
     media_filter_track_usage($file->fid);
+    
+    // Grab the fields from the file. 
+    foreach($tag_info['fields'] as $field_name => $value){
+      if (strpos($field_name, 'field_') === 0) {
+        $components = explode('[', str_replace(']', '', $field_name));
+        $lang = $components[1];
+        $delta = $components[2];
+        $value_string = $components[3];
+        $fields[$components[0]][$lang][$delta][$value_string] = $value;
+      }
+    }
 
     $attributes = is_array($tag_info['attributes']) ? $tag_info['attributes'] : array();
     $attribute_whitelist = media_variable_get('wysiwyg_allowed_attributes');
     $settings['attributes'] = array_intersect_key($attributes, array_flip($attribute_whitelist));
-
+    $settings['fields'] = $fields;
+ 
     if (!empty($tag_info['attributes']) && is_array($tag_info['attributes'])) {
       $attribute_whitelist = media_variable_get('wysiwyg_allowed_attributes');
       $settings['attributes'] = array_intersect_key($tag_info['attributes'], array_flip($attribute_whitelist));
+      $settings['fields'] = $fields;
 
       // Many media formatters will want to apply width and height independently
       // of the style attribute or the corresponding HTML attributes, so pull
@@ -578,24 +591,9 @@ function media_format_form($form, $form_state, $file) {
       they are insterted into an editor.')
   );
 
-  if ($file->type === 'image') {
-    $form['options']['alt'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Alternate text'),
-      '#description' => t('Alternative text is used by screen readers, search
-        engines, and when the image cannot be loaded. By adding alt text you
-        improve accesibility and search engine optimization.'),
-      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? $file->field_file_image_alt_text['und'][0]['safe_value'] : '',
-    );
-    $form['options']['title'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Title text'),
-      '#description' => t('Title text is used in the tool tip when a user hovers
-        their mouse over the image. Adding title text makes it easier to
-        understand the context of an image and improves usability.'),
-      '#default_value' => isset($file->field_file_image_title_text['und'][0]['safe_value']) ? $file->field_file_image_title_text['und'][0]['safe_value'] : '',
-    );
-  }
+  $form['options']['fields'] = array();
+  // Add fields.
+  field_attach_form('file', $file, $form['options']['fields'], $form_state);
 
   // Similar to a form_alter, but we want this to run first so that
   // media.types.inc can add the fields specific to a given type (like alt tags

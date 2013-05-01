@@ -38,6 +38,7 @@ function media_hook_info() {
     'media_wysiwyg_allowed_view_modes_alter',
     'media_format_form_prepare_alter',
     'media_token_to_markup_alter',
+    'media_file_displays_alter',
     'query_media_browser_alter',
   );
 
@@ -1071,6 +1072,13 @@ function media_file_displays_alter(&$displays, $file, $view_mode) {
       'status' => 1,
       'settings' => NULL,
     );
+  }
+
+  // Override the fields of the file when requested by the WYSIWYG. 
+  if (isset($file->override) && isset($file->override['fields'])) {
+    foreach ($file->override['fields'] as $field => $value) {
+      $file->{$field} = $value;
+    }
   }
 }
 
