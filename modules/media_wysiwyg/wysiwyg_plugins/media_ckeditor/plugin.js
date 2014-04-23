@@ -19,7 +19,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
     mediaLegacyWrappers: false,
 
     // Wrap Drupal plugin in a proxy plugin.
-    init: function(editor){
+    init: function(editor) {
       editor.addCommand( 'media',
       {
         exec: function (editor) {
@@ -87,7 +87,9 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
         data = Drupal.media.filter.replaceTokenWithPlaceholder(data);
         // Legacy media wrapper.
         mediaPluginDefinition.mediaLegacyWrappers = (data.indexOf("<!--MEDIA-WRAPPER-START-") !== -1);
-        data = data.replace(/<!--MEDIA-WRAPPER-START-(\d+)-->(.*?)<!--MEDIA-WRAPPER-END-\d+-->/gi, '<mediawrapper data="$1">$2</mediawrapper>');
+        if (mediaPluginDefinition.mediaLegacyWrappers) {
+          data = data.replace(/<!--MEDIA-WRAPPER-START-(\d+)-->(.*?)<!--MEDIA-WRAPPER-END-\d+-->/gi, '<mediawrapper data="$1">$2</mediawrapper>');
+        }
         return data;
       }
       function prepareDataForSourceMode(data) {
