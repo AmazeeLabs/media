@@ -8,6 +8,7 @@
   Drupal.media = Drupal.media || {};
 
   Drupal.settings.ckeditor.plugins['media'] = {
+
     /**
      * Execute the button.
      */
@@ -49,24 +50,24 @@
         attributes: formattedMedia.options
       });
 
+      var hasWidgetSupport = typeof(CKEDITOR.plugins.registered.widget) != 'undefined';
+
       // Use own wrapper element to be able to properly deal with selections.
       // Check prepareDataForWysiwygMode() in plugin.js for details.
       var wysiwygHTML = Drupal.media.filter.getWysiwygHTML(element);
 
-      // Insert element. Use CKEDITOR.dom.element.createFromHtml to ensure our
-      // custom wrapper element is preserved.
       if (wysiwygHTML.indexOf("<!--MEDIA-WRAPPER-START-") !== -1) {
         ckeditorInstance.plugins.media.mediaLegacyWrappers = true;
         wysiwygHTML = wysiwygHTML.replace(/<!--MEDIA-WRAPPER-START-(\d+)-->(.*?)<!--MEDIA-WRAPPER-END-\d+-->/gi, '');
-      } else {
-        wysiwygHTML = '<mediawrapper data="">' + wysiwygHTML + '</mediawrapper>';
       }
 
+      // Insert element. Use CKEDITOR.dom.element.createFromHtml to ensure our
+      // custom wrapper element is preserved.
       var editorElement = CKEDITOR.dom.element.createFromHtml(wysiwygHTML);
       ckeditorInstance.insertElement(editorElement);
 
       // Initialize widget on our html if possible.
-      if (parseFloat(CKEDITOR.version) >= 4.3 && typeof(CKEDITOR.plugins.registered.widget) != 'undefined') {
+      if (parseFloat(CKEDITOR.version) >= 4.3 && hasWidgetSupport) {
         ckeditorInstance.widgets.initOn( editorElement, 'mediabox' );
       }
     },
