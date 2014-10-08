@@ -47,7 +47,8 @@
       var element = Drupal.media.filter.create_element(formattedMedia.html, {
         fid: mediaFile.fid,
         view_mode: formattedMedia.type,
-        attributes: formattedMedia.options
+        attributes: formattedMedia.options,
+        fields: formattedMedia.options
       });
 
       var hasWidgetSupport = typeof(CKEDITOR.plugins.registered.widget) != 'undefined';
