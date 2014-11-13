@@ -173,6 +173,20 @@
     extract_file_info: function (element) {
       var fid, file_info, value;
 
+      // Make sure we select the last element with the .media-element class,
+      // because there was an issue with the ckeditor which duplicates the
+      // parent element when hiting enter, so in some cases, after hiting an
+      // enter at the end of a file the surrounding classes with the date-fid
+      // is copied resulting in returning a wrong file info.
+      // Some more details here: http://stackoverflow.com/questions/25212033/stop-ckeditor-from-copying-the-previous-element-class-into-each-new-element-on-p
+      // and http://stackoverflow.com/questions/12914536/prevent-attributes-from-being-copied-when-entering-new-paragraph
+      // We did not apply those solutions because we actually may want this
+      // behavior in some cases.
+      var last_element = $('.media-element', element).last();
+      if (last_element.get(0)) {
+    	  element = last_element;
+      }
+      
       if (fid = element.data('fid')) {
         Drupal.media.filter.ensureDataMap();
 
