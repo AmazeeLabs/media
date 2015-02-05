@@ -210,6 +210,19 @@ function media_wysiwyg_token_to_markup($match, $wysiwyg = FALSE) {
     }
   }
   drupal_alter('media_wysiwyg_token_to_markup', $element, $tag_info, $settings);
+
+  // Once the "link_text" is being generated, we don't want it to be changed by
+  // the file_entity_download_link theme function.
+  // See https://www.drupal.org/node/2291787 for the bug description.
+  if (isset($tag_info['link_text'])) {
+    if (isset($element['content']['file']['#theme']) && $element['content']['file']['#theme'] == 'file_entity_download_link') {
+      $element['content']['file']['#text'] = $tag_info['link_text'];
+    }
+    elseif (isset($element['#theme']) && $element['#theme'] == 'file_entity_download_link') {
+      $element['#text'] = $tag_info['link_text'];
+    }
+  }
+
   return drupal_render($element);
 }
 
