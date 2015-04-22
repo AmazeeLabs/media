@@ -121,6 +121,17 @@ function media_field_widget_form(&$form, &$form_state, $field, $instance, $langc
     '#extended' => TRUE,
   );
 
+  // If entity translation is enabled for the entity, store its form/source
+  // langcodes on the elements for further usage in
+  /* @see media_element_process() */
+  if (module_invoke('entity_translation', 'enabled', $element['#entity_type'], $element['#entity'])) {
+    $translation_handler = entity_translation_get_handler($element['#entity_type'], $element['#entity']);
+    $element['#media_parent_entity_form_langcode'] = $translation_handler->getFormLanguage();
+    if ($source_langcode = $translation_handler->getSourceLanguage()) {
+      $element['#media_parent_entity_source_langcode'] = $source_langcode;
+    }
+  }
+
   // Add image field specific validators.
   if ($field['type'] == 'image') {
     if ($field_settings['min_resolution'] || $field_settings['max_resolution']) {
