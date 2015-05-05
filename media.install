@@ -1171,3 +1171,12 @@ function media_update_7226() {
     user_role_grant_permissions($rid, array('access media browser'));
   }
 }
+
+/**
+ * Enable the Media WYSIWYG submodule also for ckeditor.
+ */
+function media_update_7227() {
+  if (module_exists('ckeditor')) {
+    module_enable(array('media_wysiwyg'));
+  }
+}
