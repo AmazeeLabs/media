@@ -70,6 +70,7 @@ function media_entity_info_alter(&$entity_info) {
 
   if (module_exists('entity_translation')) {
     $entity_info['file']['translation']['entity_translation']['class'] = 'MediaEntityTranslationHandler';
+    $entity_info['file']['translation']['entity_translation']['path schemes']['media'] = array('edit path' => 'media/%file/edit/%ctools_js');
   }
 }
 
