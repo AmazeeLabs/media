@@ -153,6 +153,10 @@ function media_wysiwyg_filter_info() {
     'weight' => 2,
     // @TODO not implemented
     'tips callback' => 'media_filter_tips',
+    // @todo: this could in some cases cause some performance issues, however
+    // they should be not so big especially if we use the display_cache module.
+    // @see http://jira.amazeelabs.com/browse/UBX-529
+    'cache' => FALSE,
   );
 
   return $filters;
