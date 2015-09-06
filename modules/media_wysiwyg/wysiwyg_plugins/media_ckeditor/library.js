@@ -46,7 +46,8 @@
       var element = Drupal.media.filter.create_element(formattedMedia.html, {
         fid: mediaFile.fid,
         view_mode: formattedMedia.type,
-        attributes: formattedMedia.options
+        attributes: formattedMedia.options,
+        fields: formattedMedia.options
       });
 
       // Use own wrapper element to be able to properly deal with selections.
