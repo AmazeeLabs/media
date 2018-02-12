@@ -24,7 +24,7 @@ Drupal.behaviors.mediaElement = {
           $(selector, context).children('.browse').show();
           $(selector, context).children('.upload').hide();
           $(selector, context).children('.attach').hide();
-          $(selector, context).children('.browse').bind('click', {configuration: configuration}, Drupal.media.openBrowser);
+          $(selector, context).find('.browse').bind('click', {configuration: configuration}, Drupal.media.openBrowser);
         });
       });
     }
